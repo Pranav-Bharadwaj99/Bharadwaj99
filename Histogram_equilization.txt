@@ -1,0 +1,70 @@
+from PIL import Image
+import numpy as np
+import cv2
+import matplotlib.pyplot as plt
+
+# function to count the pixel values
+def Count(count_list):
+    count = dict()
+    for item in count_list:
+        if item in count:
+           count[item] = count[item] + 1
+        else :
+            count[item] = 1
+    return count
+
+#function to calculate CDF function
+def CDF(dict_1):
+    sum1 = 0
+    cdf = dict()
+    for i, j in count.items():
+        sum1 = sum1 + count[i]
+        cdf[i] = sum1
+    return cdf
+
+#function to calculate histogram from CDF function
+def calculate_histogram(dict_1):
+    cdf_m = min(dict_1.values())
+    L = 255
+    hist = dict()
+    for i, j in cdf.items():
+        hist[i] = int(((dict_1[i] - cdf_m)/(699392 - cdf_m))*(L-1))
+        
+    return hist
+
+
+original_image = cv2.imread(r'C:\Users\Aditya\Pictures\Unequalized_Hawkes_Bay_NZ.jpg')
+grayscale_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+cv2.imshow('grayscale image', grayscale_image)
+cv2.imwrite(r'C:\Users\Aditya\Pictures\grayscale_image.jpg', grayscale_image)
+#cv2.waitKey(0)
+#img2arr = np.array(img)
+#print(img2arr)
+#print(img2arr.shape)
+image_shape = grayscale_image.shape
+
+list_1 = []
+list_2 = []
+for i in range(image_shape[0]):
+    for j in range(image_shape[1]):
+        list_1.append(grayscale_image[i][j])
+        list_2.append(grayscale_image[i][j])
+        
+list_1.sort()
+
+count = Count(list_1)
+cdf = CDF(count)
+
+hist = calculate_histogram(cdf)
+
+list_3 = []
+for x in list_2:
+    list_3.append(hist[x])
+
+
+arr2img = np.array(list_3, dtype = np.uint8)
+arr2img = arr2img.reshape(image_shape[0], image_shape[1])
+hist_equ_image = cv2.imshow('hist_equ_image', arr2img)
+cv2.imwrite(r'C:\Users\Aditya\Pictures\hist_equ_image.png', arr2img )
+cv2.waitKey(0)
+cv2.destroyAllWindows()

@@ -1,0 +1,28 @@
+import os
+import numpy as np
+import cv2
+
+path = 'C:/Users/Aditya/Pictures/'
+image_path = 'images.jpg'
+#original_image = cv2.imread(r'C:\Users\Aditya\Pictures\Lenna_(test_image).png')
+original_image = cv2.imread(os.path.join(path , image_path))
+cv2.imshow(image_path, original_image)
+print(original_image.shape)
+X, Y, Z = original_image.shape[0], original_image.shape[1], original_image.shape[2]
+
+blue_image = np.zeros([X, Y, Z], dtype = np.uint8)
+green_image = np.zeros([X, Y, Z], dtype = np.uint8)
+red_image = np.zeros([X, Y, Z], dtype = np.uint8)
+
+seperate_images = [blue_image, green_image, red_image]
+for x, y in zip(seperate_images, range(Z)):
+    x[:, :, y] = original_image[:, :, y]
+    attach = str(y) + '.jpg'
+    cv2.imwrite(os.path.join(path , attach),x)
+    
+cv2.imshow('Blue Image', blue_image)
+cv2.imshow('Green Image', green_image)
+cv2.imshow('Red Image', red_image)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()

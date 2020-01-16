@@ -1,0 +1,57 @@
+import cv2
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+
+def dec2bin(pixel):
+    bin_value = []
+    if (pixel>1) :
+        bin_value = dec2bin(pixel//2)
+    bin_value.append(pixel%2)
+    return bin_value
+
+path = 'C:/Users/Aditya/Pictures/'
+image_path = 'Lenna_(test_image).png'
+original_image = cv2.imread(os.path.join(path , image_path))
+gray_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+cv2.imshow('grayscale image', gray_image)
+X, Y = gray_image.shape[0], gray_image.shape[1]
+
+one_image = np.zeros([X, Y])
+two_image = np.zeros([X, Y])
+three_image = np.zeros([X, Y])
+four_image = np.zeros([X, Y])
+five_image = np.zeros([X, Y])
+six_image = np.zeros([X, Y])
+seven_image = np.zeros([X, Y])
+eigth_image = np.zeros([X, Y])
+
+arr = np.zeros([8])
+for x in range(X):
+    for y in range(Y):
+        result = dec2bin(gray_image[x,y])
+        arr = np.zeros([8])
+        for i in range(len(result)):
+            arr[7-i] = result[len(result)-1-i]
+        one_image[x, y] = arr[0]
+        two_image[x, y] = arr[1]
+        three_image[x, y] = arr[2]
+        four_image[x, y] = arr[3]
+        five_image[x, y] = arr[4]
+        six_image[x, y] = arr[5]
+        seven_image[x, y] = arr[6]
+        eigth_image[x, y] = arr[7]
+        
+        
+fig = plt.figure()
+cv2.imshow('first image', one_image)
+cv2.imshow('two image', two_image)
+cv2.imshow('third image', three_image)
+cv2.imshow('fourth image', four_image)
+cv2.imshow('fifth image', five_image)
+cv2.imshow('sixth image', six_image)
+cv2.imshow('seventh image', seven_image)
+cv2.imshow('eigth image', eigth_image)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
