@@ -1,0 +1,58 @@
+import numpy as np
+x=np.array([[12,14,23,13],[16,11,21,18],[21,24,23,12],[12,21,20,10]])
+y=np.array([[4,4,3,2],[3,7,6,1],[2,7,6,1],[0,1,0,2]])
+p=np.array([[4,4,3,2],[3,7,6,1],[2,7,6,1],[0,1,0,2]])
+for i in range(0,x.shape[0],1):
+  for j in range(0,x.shape[0],1):
+    a=x[i][j]
+    c=i
+    t=j
+    for m in range(2):
+      o=c
+      u=t
+      k=0
+      if((o<3) and a>x[o+1][u]):
+        a=x[o+1][u]
+        c=o+1
+        t=u
+        k+=1
+      if((u>0) and a>x[o][u-1]):
+        a=x[o][u-1]
+        c=o
+        t=u-1 
+        k+=1
+      if((u<3)and(a>x[o][u+1])):
+        a=x[o][u+1]
+        c=o
+        t=u+1
+        k+=1
+      if(((o>0)and(u>1)) and (a>x[o-1][u-1])):
+        a=x[o-1][u-1]
+        c=o-1
+        t=u-1
+        k+=1
+      if(((o<3)and(u<3))and(a>x[o+1][u+1])):
+        a=x[o+1][u+1]
+        c=o+1
+        t=u+1
+        k+=1
+      if((o>0)and(u<3)and a>x[o-1][u+1]):
+        a=x[o-1][u+1]
+        c=o-1
+        t=u+1
+        k+=1
+      if((o<3)and(u>0) and a>x[o+1][u-1]):
+        a=x[o+1][u-1]
+        c=o+1
+        t=u-1
+        k+=1 
+      if((o>0) and a>x[o-1][u]):
+        a=x[o-1][u]
+        c=o-1
+        t=u
+        k+=1
+      if(k==0):
+        c=o
+        t=u  
+      p[i][j]=y[c][t]
+print(p)  
