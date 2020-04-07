@@ -1,0 +1,26 @@
+import cv2
+import os
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+path = r'C:\Users\Shariq Nehal\Desktop'
+image_path = 't4.jpg'
+original_image = cv2.imread(os.path.join(path , image_path))
+gray_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+X, Y = gray_image.shape[0], gray_image.shape[1]
+stride=1
+gray_image1=np.pad(gray_image, (1, 1), 'constant')
+lpf=np.array([[1,-1,1],[1,-1,1],[1,-1,1]])/9
+gray_image2=np.zeros([X,Y])
+for i in range(X):
+    for j in range(Y):
+        horizontal_start=stride*j
+        horizontal_end=stride*j+3
+        vertical_start=stride*i
+        vertical_end=stride*i+3
+        gray_image2[i,j]=np.floor(np.sum(np.multiply(gray_image1[vertical_start:vertical_end,horizontal_start:horizontal_end],lpf)))
+y=np.uint8(gray_image2)
+cv2.imshow('out',y)
+cv2.imshow('a',gray_image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
