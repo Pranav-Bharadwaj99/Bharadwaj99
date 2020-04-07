@@ -1,0 +1,35 @@
+import cv2
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+
+def dec2bin(pixel):
+    bin_value = []
+    if (pixel>1) :
+        bin_value = dec2bin(pixel//2)
+    bin_value.append(pixel%2)
+    return bin_value
+
+path = r'C:\Users\Pranav Bharadwaj\Desktop'
+image_path = 't4.jpg'
+original_image = cv2.imread(os.path.join(path , image_path))
+gray_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+cv2.imshow('a',gray_image)
+path1 = r'C:\Users\Pranav Bharadwaj\Desktop'
+image_path1 = 't2.png'
+original_image1 = cv2.imread(os.path.join(path1 , image_path1))
+gray_image1 = cv2.cvtColor(original_image1, cv2.COLOR_BGR2GRAY)
+cv2.imshow('t',gray_image1)
+X, Y = gray_image1.shape[0], gray_image1.shape[1]
+result=np.zeros([8])
+for x in range(X):
+    for y in range(Y):
+        result = dec2bin(gray_image[x,y])
+        if(gray_image1[x,y]>=100):
+            result[len(result)-1]=1
+        else:
+            result[len(result)-1]=0
+        gray_image[x,y]=bin2dec(result)      
+cv2.imshow('b',gray_image)                        
+cv2.waitKey(0)
+cv2.destroyAllWindows()
