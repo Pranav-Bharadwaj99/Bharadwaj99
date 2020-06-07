@@ -1,0 +1,76 @@
+def downsampling(p):
+ n=len(p)
+ z=np.zeros([int(n/2),int(n/2)])
+ stride=2
+ for i in range(int(n/2)):
+   for j in range(int(n/2)):
+        horizontal_start=stride*j
+        horizontal_end=stride*j+2
+        vertical_start=stride*i
+        vertical_end=stride*i+2
+        z[i,j]=np.uint8(np.mean(p[vertical_start:vertical_end,horizontal_start:horizontal_end]))
+ return z     
+def lpf(p):
+  X, Y = p.shape[0], p.shape[1]
+  stride=1
+  gray_image1=np.pad(p, (1, 1), 'constant')
+  lpf=np.array([[1,1,1],[1,1,1],[1,1,1]])/9
+  gray_image2=np.zeros([X,Y])
+  for i in range(X):
+      for j in range(Y):
+          horizontal_start=stride*j
+          horizontal_end=stride*j+3
+          vertical_start=stride*i
+          vertical_end=stride*i+3
+          gray_image2[i,j]=np.floor(np.sum(np.multiply(gray_image1[vertical_start:vertical_end,horizontal_start:horizontal_end],lpf)))
+  y=np.uint8(gray_image2)
+  return y
+def hpf(p):
+  X, Y = p.shape[0], p.shape[1]
+  stride=1
+  gray_image1=np.pad(p, (1, 1), 'constant')
+  lpf=np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]])/9
+  gray_image2=np.zeros([X,Y])
+  for i in range(X):
+      for j in range(Y):
+          horizontal_start=stride*j
+          horizontal_end=stride*j+3
+          vertical_start=stride*i
+          vertical_end=stride*i+3
+          gray_image2[i,j]=np.floor(np.sum(np.multiply(gray_image1[vertical_start:vertical_end,horizontal_start:horizontal_end],lpf)))
+  y=np.uint8(gray_image2)
+  return y
+def dwt(p):
+ Il=lpf(p)
+ Ih=hpf(p)
+ Ild1=downsampling(Il)
+ Ill=lpf(Ild1)
+ ILL=downsampling(Ill)
+ cv2_imshow(ILL)
+ return ILL
+def dec2bin(pixel):
+  bin_value = []
+  if (pixel>1) :
+      bin_value = dec2bin(pixel//2)
+  bin_value.append(pixel%2)
+  return bin_value
+def bin2dec(n):
+  p=0
+  for i in range(len(n)):
+      p=p+n[i]*2**i    
+  return p     
+def watermarking_dwt(r,t):
+  p=dwt(r)
+  q=dwt(t)   
+  X, Y = q.shape[0], q.shape[1]
+  result=np.zeros([8])
+  for x in range(X):
+      for y in range(Y):
+          result = dec2bin(p[x,y])
+          if(q[x,y]>=100):
+              result[len(result)-1]=1
+          else:
+              result[len(result)-1]=0
+          p[x,y]=bin2dec(result)      
+  cv2_imshow(p)
+watermarking_dwt(gray_image1,gray_image3) 
