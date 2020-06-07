@@ -1,0 +1,17 @@
+import numpy as np
+import math as m
+N=int(input("enter Number of rows and column"))
+y=np.uint8(np.random.rand(N,N)*100)
+def dct(y):
+    n=len(y)
+    z=np.zeros([n,n])
+    for i in range(n):
+        for j in range(n):
+            if(i==0):
+                z[i][j]=np.power(1/y[i][j],0.5)
+            else:
+                z[i][j]=np.power(2/n,0.5)*np.cos(((2*i+1)*m.pi*j)/(2*n))
+    print(z)            
+            
+print(y)
+dct(y)    
